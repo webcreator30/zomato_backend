@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.zomato.repository.UserRepo;
 
-
 @Service
 public class AuthService {
     @Autowired
@@ -21,10 +20,11 @@ public class AuthService {
     private SmsService smsService;
 
     public String sendOtp(String mobile) {
-       System.out.println("Chalaaaaaaaaaaaaa");
+        System.out.println("userRepository = " + userRepo);
+        System.out.println("Chalaaaaaaaaaaaaa");
         var user = userRepo.findByMobile(mobile);
         System.out.println("Found user: " + user);
-        
+
         if (user.isEmpty()) {
             return "❌ Mobile number not registered.";
 
@@ -35,9 +35,9 @@ public class AuthService {
 
     }
 
-    public String verifyOTP(String mobile , String otp){
+    public String verifyOTP(String mobile, String otp) {
         Boolean verify = otpService.verifyOTP(mobile, otp);
-        if(!verify){
+        if (!verify) {
             return "❌ Invalid or expired OTP";
         }
         return jwtService.generateToken(mobile);

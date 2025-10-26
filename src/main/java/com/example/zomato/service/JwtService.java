@@ -2,6 +2,7 @@ package com.example.zomato.service;
 
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -19,15 +20,27 @@ public class JwtService {
                 .setSubject(mobile)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256,SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
-    public String extractMobile(String token){
+    public String extractMobile(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    private Claims getClaims(String token) {
         return Jwts.parser()
-        .setSigningKey(SECRET_KEY)
-        .parseClaimsJws(token)
-        .getBody()
-        .getSubject();
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private boolean isTokenExpired(String token) {
+        return getClaims(token).getExpiration().before(new Date());
+    }
+    // Validate token (checks signature + expiry)
+    public boolean isTokenValid(String token , org.springframework.security.core.userdetails.UserDetails userDetails){
+         String mobile = extractMobile(token);
+         return (mobile.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
