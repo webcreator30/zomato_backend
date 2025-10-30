@@ -19,9 +19,18 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    
     @OneToOne
     private User user;
+
+    // cascade = CascadeType.ALL: Any operation performed on the Cart (like save,
+    // update, delete) will be also cascaded to the associated CartItem objects in
+    // items. For example, deleting a cart removes all its items automatically.​
+
+    // orphanRemoval=true:
+    // If a CartItem object is removed from the items list (and no longer
+    //  referenced by any Cart), that item gets deleted from
+    //  the database automatically when the cart is saved.
+    // This keeps your database clean and free of "orphaned" line items.
 
     @OneToMany(mappedBy = "cart" , cascade = CascadeType.ALL , orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
@@ -49,6 +58,13 @@ public class Cart {
     public void setItems(List<CartItem> items) {
         this.items = items;
     }
+
+    // public Cart(long id, User user, List<CartItem> items) {
+    //     this.id = id;
+    //     this.user = user;
+    //     this.items = items;
+    // }
+
     
-    
+
 }

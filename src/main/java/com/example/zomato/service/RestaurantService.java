@@ -13,22 +13,22 @@ import com.example.zomato.entity.UserAddress;
 
 @Service
 public class RestaurantService {
-    
+
     @Autowired
     private RestaurantRepo restaurantRepo;
 
     @Autowired
     private UserAddressRepo userAddressRepo;
 
-    public List<Restaurant> getNearByRestaurants(Long userAddressId , Double latitude , Double longitude){
-     UserAddress address = userAddressRepo.findById(userAddressId).orElseThrow(()-> new RuntimeException("User Address Not Found !" + (userAddressId)));
+    public List<Restaurant> getNearByRestaurants(Long userAddressId, Double latitude, Double longitude) {
+        UserAddress address = userAddressRepo.findById(userAddressId)
+                .orElseThrow(() -> new RuntimeException("User Address Not Found !" + (userAddressId)));
 
-     address.setLatitude(latitude);
-     address.setLongitude(longitude);
-     userAddressRepo.save(address);
+        address.setLatitude(latitude);
+        address.setLongitude(longitude);
+        userAddressRepo.save(address);
 
-     return restaurantRepo.findRestaurantsNearby(latitude , longitude , 15.0);
+        return restaurantRepo.findRestaurantsNearby(latitude, longitude, 15.0);
     }
-
 
 }
