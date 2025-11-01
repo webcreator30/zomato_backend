@@ -1,5 +1,8 @@
 package com.example.zomato.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,13 +19,25 @@ public class CartItem {
     private long id;
 
     @ManyToOne
+    @JsonIgnore
     private Cart cart;
 
     @ManyToOne
     private Menu menu;
 
+    @Column(nullable = false)
+    private int quantity = 1;
+
     public long getId() {
         return id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public void setId(long id) {

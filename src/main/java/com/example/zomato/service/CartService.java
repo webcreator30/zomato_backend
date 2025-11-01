@@ -41,22 +41,64 @@ public class CartService {
                 });
 
         // check if same item already in cart (optional future improvement)
+        CartItem existingItem = cart.getItems().stream().filter(item -> item.getMenu().getId().equals(menuId))
+                .findFirst().orElse(null);
+        if (existingItem != null) {
+            existingItem.setQuantity(existingItem.getQuantity() + 1);
+            cartIemRepo.save(existingItem);
+            return menu.getName() + " " + "Item Quantity Increased by 1";
+        } else {
+            CartItem cartItem = new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setMenu(menu);
+            cart.getItems().add(cartItem);
 
-        CartItem cartItem = new CartItem();
-        cartItem.setCart(cart);
-        cartItem.setMenu(menu);
-        cart.getItems().add(cartItem);
+            cartIemRepo.save(cartItem);
+            cartRepo.save(cart);
+            return menu.getName() + " " + "Item Added to Cart";
+        }
 
-        cartIemRepo.save(cartItem);
-        cartRepo.save(cart);
-        return menu.getName() + " " + "Item Added to Cart";
+    }
+
+    public Cart viewChart(Long userId) {
+        Cart cart = cartRepo.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart Not Found"));
+        return cart;
+    }
+
+    public String removeItemFromCart(Long userId, Long menuIdToBeRemoved) {
+        Cart cart = cartRepo.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart Not Found"));
+        CartItem cartItem = cart.getItems()
+                .stream()
+                .filter(item -> item.getMenu().getId().equals(menuIdToBeRemoved))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Menu Item Not Found in Cart"));
+
+        int newQuantity = cartItem.getQuantity() - 1;
+
+        if (newQuantity > 0) {
+            cartItem.setQuantity(newQuantity);
+            cartIemRepo.save(cartItem);
+            return cartItem.getMenu().getName() + " " + "CartItem quantity decreased by 1";
+        } else {
+            // Remove Item from cart
+            cart.getItems().remove(cartItem);
+            cartIemRepo.delete(cartItem);
+
+            if (cart.getItems().isEmpty()) {
+                cartRepo.delete(cart);
+                return "Item removed. Cart is now empty and deleted.";
+            }
+
+            cartRepo.save(cart);
+            return "Item removed from cart";
+        }
+
     }
 
 
-    public Cart viewChart(Long userId){
-    Cart cart = cartRepo.findByUserId(userId).orElseThrow(()-> new RuntimeException("Cart Not Found"));
-    return cart;
+    public int getItemQuantity(Long userId , Long menuId){
+        Cart cart = cartRepo.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart Not Found"));
+        CartItem cartItem = cart.getItems().stream().filter(item -> item.getMenu().getId().equals(menuId)).findFirst().orElseThrow(()->new RuntimeException("Item Not Found in Cart"));
+        return cartItem.getQuantity();
     }
-
-    
 }

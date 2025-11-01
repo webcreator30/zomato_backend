@@ -1,5 +1,7 @@
 package com.example.zomato.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +17,7 @@ public class UserAddress {
     private Long Id;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id" , nullable = false)
     private User user;
 
