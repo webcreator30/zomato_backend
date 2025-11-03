@@ -38,6 +38,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<!-- Razorpay Java SDK -->
+<dependency>
+  <groupId>com.razorpay</groupId>
+  <artifactId>razorpay-java</artifactId>
+  <version>1.3.2</version> <!-- replace with latest if you want -->
+</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
