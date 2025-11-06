@@ -38,6 +38,28 @@ public class Order {
 
     private String razorpayPaymentId;
 
+    private String razorpayRefundId;
+
+    public String getRazorpayRefundId() {
+        return razorpayRefundId;
+    }
+
+    public void setRazorpayRefundId(String razorpayRefundId) {
+        this.razorpayRefundId = razorpayRefundId;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
+    }
+
+    private String cancelReason;
+
+
+    
     public String getRazorpayOrderId() {
         return razorpayOrderId;
     }

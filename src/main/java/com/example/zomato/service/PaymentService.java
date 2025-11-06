@@ -102,6 +102,7 @@ public class PaymentService {
         Order order = orderRepo.findByRazorpayOrderId(razorpayOrderId)
                 .orElseGet(() -> orderRepo.findById(Long.valueOf(orderId)).orElseThrow());
         order.setPaymentStatus(PaymentStatus.PAID);
+        
         order.setDeliveryStatus(DeliveryStatus.PREPARING);
         order.setRazorpayPaymentId(razorpayPaymentId);
         orderRepo.save(order);
