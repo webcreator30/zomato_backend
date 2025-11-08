@@ -19,6 +19,7 @@ import com.example.zomato.repository.CartRepo;
 import com.example.zomato.repository.MenuRepo;
 import com.example.zomato.repository.OrderItemRepo;
 import com.example.zomato.repository.OrderRepo;
+import com.razorpay.Payment;
 
 @Service
 public class OrderService {
@@ -37,6 +38,9 @@ public class OrderService {
 
     @Autowired
     private MenuRepo menuRepo;
+
+    @Autowired
+    private PaymentService paymentService;
 
     public String placeOrder(Long userId) {
         Cart cart = cartRepo.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart Not Found"));
@@ -70,13 +74,16 @@ public class OrderService {
         }
         order.setOrderItems(orderItems);
         order.setTotalAmount(totalAmount);
-
         orderRepo.save(order);
+
+        // ✅ Step 2: Create Razorpay order immediately
+        Map<String , Object> paymentData = paymentService.createRazorpayOrder(order.getId());
+
+        System.out.println("Razorpay Order Created called from Order Service: " + paymentData);
 
         // Clear Cart After Order Placed
         cart.getItems().clear();
         cartRepo.save(cart);
-
         return "Order placed Successfully Order Id: " + order.getId();
 
     }

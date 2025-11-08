@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.zomato.entity.Order;
 import com.example.zomato.entity.Refund;
@@ -13,6 +14,7 @@ import com.example.zomato.repository.OrderRepo;
 import com.example.zomato.repository.RefundRepo;
 import com.razorpay.RazorpayClient;
 
+@Service
 public class RefundService {
 
     @Autowired
@@ -34,7 +36,7 @@ public class RefundService {
             throw new RuntimeException("Order is not paid — cannot initiate refund");
         }
         // Check if order already refunded
-        if (refundRepo.findByOrderId(reason).isPresent()) {
+        if (refundRepo.findByOrderId(orderId).isPresent()) {
             throw new RuntimeException("Order Already Refunded Cannot initiate refund");
         }
 
