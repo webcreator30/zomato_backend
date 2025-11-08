@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface RefundRepo extends JpaRepository <Refund , Long>{
     Optional<Refund> findByRazorpayRefundId(String razorpayRefundId);    
+
+    Optional<Refund> findByOrderId(String orderId);
 }

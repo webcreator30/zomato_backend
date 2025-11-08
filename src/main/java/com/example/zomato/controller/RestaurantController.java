@@ -23,7 +23,7 @@ public class RestaurantController {
         Long userAddressId = Long.valueOf(request.get("userAddressId").toString());
         Double latitude = Double.valueOf(request.get("latitude").toString());
         Double longitude = Double.valueOf(request.get("longitude").toString());
-
+        
         List<Restaurant> restaurants = restaurantService.getNearByRestaurants(userAddressId, latitude, longitude);
         return ResponseEntity.ok(restaurants);
     }

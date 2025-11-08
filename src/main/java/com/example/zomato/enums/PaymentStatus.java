@@ -3,5 +3,6 @@ package com.example.zomato.enums;
 public enum PaymentStatus {
     PENDING,
     PAID,
-    FAILED
+    FAILED,
+    REFUND_INITIATED
 }
