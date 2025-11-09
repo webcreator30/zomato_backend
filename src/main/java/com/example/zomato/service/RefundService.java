@@ -33,11 +33,11 @@ public class RefundService {
         // Step 2️⃣ : Validate that refund is allowed
         // Check if payment satus is not PAID than no refund
         if (!PaymentStatus.PAID.equals(order.getPaymentStatus())) {
-            throw new RuntimeException("Order is not paid — cannot initiate refund");
+            throw new IllegalStateException("Order is not paid — cannot initiate refund");
         }
         // Check if order already refunded
         if (refundRepo.findByOrderId(orderId).isPresent()) {
-            throw new RuntimeException("Order Already Refunded Cannot initiate refund");
+            throw new IllegalStateException("Order Already Refunded Cannot initiate refund");
         }
 
         try {

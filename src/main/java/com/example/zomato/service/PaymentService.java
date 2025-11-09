@@ -32,10 +32,10 @@ public class PaymentService {
     @Autowired
     private RazorpayClient razorpayClient;
 
-    @Value("")
+    @Value("${api_key}")
     private String razorpayKeyId;
 
-    @Value("")
+    @Value("key_secret")
     private String razorpayKeySecret;
 
     public Map<String, Object> createRazorpayOrder(Long orderId) {
