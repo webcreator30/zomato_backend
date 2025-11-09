@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HexFormat;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -14,6 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.example.zomato.entity.Order;
@@ -35,10 +37,12 @@ public class PaymentService {
     @Value("${api_key}")
     private String razorpayKeyId;
 
-    @Value("key_secret")
+    @Value("${key_secret}")
     private String razorpayKeySecret;
 
-    public Map<String, Object> createRazorpayOrder(Long orderId) {
+
+    @Async
+    public CompletableFuture<Map<String, Object>> createRazorpayOrder(Long orderId) {
         Order order = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("Order Not Found"));
         try {
             int amountInPaise = order.getTotalAmount().multiply(new BigDecimal(100)).intValue();
@@ -70,8 +74,7 @@ public class PaymentService {
             response.put("key", razorpayKeyId);
             response.put("orderId", order.getId());
 
-            return response;
-
+            return CompletableFuture.completedFuture(response);
         } catch (Exception e) {
             throw new RuntimeException("Unable to create Razorpay order: " + e.getMessage(), e);
         }

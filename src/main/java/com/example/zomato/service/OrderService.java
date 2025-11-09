@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,8 +78,7 @@ public class OrderService {
         orderRepo.save(order);
 
         // ✅ Step 2: Create Razorpay order immediately
-        Map<String , Object> paymentData = paymentService.createRazorpayOrder(order.getId());
-
+        CompletableFuture<Map<String , Object>> paymentData = paymentService.createRazorpayOrder(order.getId());
         System.out.println("Razorpay Order Created called from Order Service: " + paymentData);
 
         // Clear Cart After Order Placed
