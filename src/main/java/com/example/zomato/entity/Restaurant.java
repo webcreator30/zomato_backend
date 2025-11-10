@@ -1,5 +1,7 @@
 package com.example.zomato.entity;
 
+import java.io.Serializable;
+
 import com.example.zomato.enums.Type; // THIS ONE
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,7 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Restaurant {
+public class Restaurant{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

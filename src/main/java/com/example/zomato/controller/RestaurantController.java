@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,8 +24,12 @@ public class RestaurantController {
         Long userAddressId = Long.valueOf(request.get("userAddressId").toString());
         Double latitude = Double.valueOf(request.get("latitude").toString());
         Double longitude = Double.valueOf(request.get("longitude").toString());
+        Double radius = Double.valueOf(request.get("radius").toString());
+
         
-        List<Restaurant> restaurants = restaurantService.getNearByRestaurants(userAddressId, latitude, longitude);
+
+        List<Restaurant> restaurants = restaurantService.getNearByRestaurants(userAddressId, latitude, longitude,
+                radius);
         return ResponseEntity.ok(restaurants);
     }
 

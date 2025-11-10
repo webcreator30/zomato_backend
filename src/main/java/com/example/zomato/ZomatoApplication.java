@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableAsync
 @SpringBootApplication
+@EnableCaching
 public class ZomatoApplication {
 
 	public static void main(String[] args) {
