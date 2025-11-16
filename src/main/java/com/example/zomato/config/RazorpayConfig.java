@@ -11,10 +11,10 @@ import com.razorpay.RazorpayException;
 public class RazorpayConfig {
  
     
-    @Value("${api_key}")
+    @Value("${RAZORPAY_API_KEY}")
     private String apiKey;
     
-    @Value("${key_secret}")
+    @Value("${RAZORPAY_KEY_SECRET}")
     private String keySecret;
 
     // RazorpayClient client is the official Razorpay SDK class that enables

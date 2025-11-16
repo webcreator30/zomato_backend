@@ -34,10 +34,10 @@ public class PaymentService {
     @Autowired
     private RazorpayClient razorpayClient;
 
-    @Value("${api_key}")
+    @Value("${RAZORPAY_API_KEY}")
     private String razorpayKeyId;
 
-    @Value("${key_secret}")
+    @Value("${RAZORPAY_KEY_SECRET}")
     private String razorpayKeySecret;
 
 
