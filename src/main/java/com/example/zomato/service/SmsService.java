@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class SmsService {
 
-    @Value("${fast2sms.api.key}")
+    @Value("${FAST2SMS_API_KEY}")
     private String apiKey;
 
     public void sendOtpSms(String mobile , String otp){

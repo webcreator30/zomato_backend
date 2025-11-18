@@ -20,11 +20,8 @@ public class AuthService {
     private SmsService smsService;
 
     public String sendOtp(String mobile) {
-        System.out.println("userRepository = " + userRepo);
-        System.out.println("Chalaaaaaaaaaaaaa");
-        var user = userRepo.findByMobile(mobile);
-        System.out.println("Found user: " + user);
 
+        var user = userRepo.findByMobile(mobile);
         if (user.isEmpty()) {
             return "❌ Mobile number not registered.";
 

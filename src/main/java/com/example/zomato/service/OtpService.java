@@ -17,7 +17,7 @@ public class OtpService {
     // Generate and Save OTP in Reddis 
     public String generateOTP(String mobile) {
         String otp = String.valueOf(10000 + new Random().nextInt(90000));
-        redisTemplate.opsForValue().set("OTP_" + mobile, otp, Duration.ofMinutes(10));
+        redisTemplate.opsForValue().set("OTP_" + mobile, otp, Duration.ofMinutes(10));       
         return otp;
     }
 
