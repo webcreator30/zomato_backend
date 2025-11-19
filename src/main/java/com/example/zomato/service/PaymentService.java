@@ -24,6 +24,7 @@ import com.example.zomato.enums.PaymentStatus;
 import com.example.zomato.repository.OrderRepo;
 import com.razorpay.RazorpayClient;
 
+import io.lettuce.core.json.JsonObject;
 import jakarta.persistence.Converts;
 
 @Service
@@ -40,6 +41,8 @@ public class PaymentService {
     @Value("${RAZORPAY_KEY_SECRET}")
     private String razorpayKeySecret;
 
+    @Value("${RAZORPAY_WEBHOOK_SECRET}")
+    private String webhookSecret;
 
     @Async
     public CompletableFuture<Map<String, Object>> createRazorpayOrder(Long orderId) {
@@ -105,7 +108,7 @@ public class PaymentService {
         Order order = orderRepo.findByRazorpayOrderId(razorpayOrderId)
                 .orElseGet(() -> orderRepo.findById(Long.valueOf(orderId)).orElseThrow());
         order.setPaymentStatus(PaymentStatus.PAID);
-        
+
         order.setDeliveryStatus(DeliveryStatus.PREPARING);
         order.setRazorpayPaymentId(razorpayPaymentId);
         orderRepo.save(order);
@@ -135,4 +138,31 @@ public class PaymentService {
             throw new RuntimeException("Unable to calculate HMAC", e);
         }
     }
+
+    public void handleWebhook(String payload, String razorpaySignature) {
+        String expectedSignature = hmacSha256(payload, webhookSecret);
+
+        if (!expectedSignature.equals(razorpaySignature)) {
+            throw new RuntimeException("Invalid Webhook signature");
+        }
+
+        JSONObject json = new JSONObject(payload);
+
+        String event = json.getString("event");
+
+        if ("payment.captured".equals(event)) {
+            String paymentId = json.getJSONObject("payload").getJSONObject("payment").getString("id");
+            String razorpayOrderId = json.getJSONObject("payload").getJSONObject("payment").getString("order_id");
+
+            // Update order
+
+            Order order = orderRepo.findByRazorpayOrderId(razorpayOrderId).orElseThrow();
+            order.setPaymentStatus(PaymentStatus.PAID);
+            order.setDeliveryStatus(DeliveryStatus.PREPARING);
+            order.setRazorpayPaymentId(paymentId);
+            orderRepo.save(order);
+        }
+
+    }
+
 }
